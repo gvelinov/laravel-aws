@@ -1,4 +1,4 @@
-#Basic AWS PHP SDK examples
+# Basic AWS PHP SDK examples
 
 #### Local Install
 1. Clone the repo
