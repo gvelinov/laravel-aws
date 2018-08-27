@@ -11,7 +11,7 @@ class AwsS3
     private $region = 'eu-west-1';
     private $version = 'latest';
     private $s3Client;
-    private $bucketName = 'aws-axway-bucket';
+    private $bucketName = 'aws-my-bucket-laravel-test';
 
     public function __construct()
     {
@@ -30,11 +30,19 @@ class AwsS3
     {
         // Creating S3 Bucket
         try {
-            $exists = $this->s3Client->headBucket([
-                'Bucket' => $this->bucketName
-            ]);
+            try {
+                $exists = $this->s3Client->headBucket([
+                    'Bucket' => $this->bucketName
+                ]);
+            } catch (S3Exception $ex) {
+                if ($ex->getCode() === 404) {
+                    $exists = false;
+                } else {
+                    dd($ex->getMessage());
+                }
+            }
 
-            if (!$exists) {
+            if (isset($exists) && !$exists) {
                 $this->s3Client->createBucket([
                     'Bucket' => $this->bucketName,
                 ]);
