@@ -4,22 +4,23 @@ namespace App\Http\AWS;
 use Aws\S3\S3Client;
 use Aws\Exception\AwsException;
 use Aws\S3\Exception\S3Exception;
-use Mockery\Exception;
 
-class AwsS3
+class S3
 {
-    private $region = 'eu-west-1';
-    private $version = 'latest';
     private $s3Client;
     private $bucketName = 'aws-my-bucket-laravel-test';
 
-    public function __construct()
+    public function __construct(S3Client $client)
     {
-        $this->s3Client = new S3Client([
-            'profile' => 'default',
-            'region' => $this->region,
-            'version' => $this->version
-        ]);
+        $this->s3Client = $client;
+    }
+
+    /**
+     * @param string $bucketName
+     */
+    public function setBucketName(string $bucketName): void
+    {
+        $this->bucketName = $bucketName;
     }
 
     /**
@@ -35,7 +36,7 @@ class AwsS3
                     'Bucket' => $this->bucketName
                 ]);
             } catch (S3Exception $ex) {
-                if ($ex->getCode() === 404) {
+                if ($ex->getAwsErrorCode() === 'NotFound' || $ex->getCode() === 404) {
                     $exists = false;
                 } else {
                     dd($ex->getMessage());
