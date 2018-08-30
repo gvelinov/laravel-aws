@@ -15,4 +15,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post('/aws/s3/upload', 'IndexController@index');
+Route::post('/aws/s3/upload', 'AWS\S3Controller@upload');
+Route::get('/aws/s3/', 'AWS\S3Controller@index');

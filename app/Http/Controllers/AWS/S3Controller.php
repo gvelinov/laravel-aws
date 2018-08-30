@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
-
+namespace App\Http\Controllers\AWS;
 
 use App\Http\AWS\S3;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
-class IndexController extends Controller
+class S3Controller extends Controller
 {
     /**
      * The AWS SDK S3 Client.
@@ -25,11 +25,16 @@ class IndexController extends Controller
         $this->awsS3->setBucketName('my-aws-laravel-test-bucket');
     }
 
+    public function index()
+    {
+        return view('s3.upload');
+    }
+
     /**
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function index(Request $request)
+    public function upload(Request $request)
     {
         $this->validate($request, [
             'file' => ['required', 'file', 'image', 'max:10000']
